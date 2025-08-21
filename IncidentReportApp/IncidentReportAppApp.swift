@@ -6,12 +6,18 @@
 //
 
 import SwiftUI
+import Coordinator
 
 @main
 struct IncidentReportAppApp: App {
+    @StateObject private var appCoordinator = AppCoordinator()
+    @StateObject private var dependencies = AppDependencies()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            AppCoordinatorView()
+                .environmentObject(appCoordinator)
+                .environmentObject(dependencies)
         }
     }
 }
