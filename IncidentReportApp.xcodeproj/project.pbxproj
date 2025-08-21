@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4B012B172E576D6300AE2E55 /* DesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = 4B012B162E576D6300AE2E55 /* DesignSystem */; };
+		4B012B1A2E576E5300AE2E55 /* Networking in Frameworks */ = {isa = PBXBuildFile; productRef = 4B012B192E576E5300AE2E55 /* Networking */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B012B1A2E576E5300AE2E55 /* Networking in Frameworks */,
 				4B012B172E576D6300AE2E55 /* DesignSystem in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -118,6 +120,7 @@
 			name = IncidentReportApp;
 			packageProductDependencies = (
 				4B012B162E576D6300AE2E55 /* DesignSystem */,
+				4B012B192E576E5300AE2E55 /* Networking */,
 			);
 			productName = IncidentReportApp;
 			productReference = 4B141BFC2E57666300592D78 /* IncidentReportApp.app */;
@@ -203,6 +206,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				4B012B152E576D6300AE2E55 /* XCLocalSwiftPackageReference "Packages/DesignSystem" */,
+				4B012B182E576E5300AE2E55 /* XCLocalSwiftPackageReference "Packages/Networking" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4B141BFD2E57666300592D78 /* Products */;
@@ -573,12 +577,20 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/DesignSystem;
 		};
+		4B012B182E576E5300AE2E55 /* XCLocalSwiftPackageReference "Packages/Networking" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/Networking;
+		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		4B012B162E576D6300AE2E55 /* DesignSystem */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DesignSystem;
+		};
+		4B012B192E576E5300AE2E55 /* Networking */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Networking;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
