@@ -15,7 +15,7 @@ struct HomeView: View {
     }
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack(spacing: 0) {
                 // Header with user info
                 headerView
@@ -48,7 +48,7 @@ struct HomeView: View {
                 }
             }
             .sheet(isPresented: $viewModel.showStartDatePicker) {
-                NavigationView {
+                NavigationStack {
                     VStack {
                         DatePicker(
                             "",
@@ -78,7 +78,7 @@ struct HomeView: View {
                 }
             }
             .sheet(isPresented: $viewModel.showEndDatePicker) {
-                NavigationView {
+                NavigationStack {
                     VStack {
                         DatePicker(
                             "",

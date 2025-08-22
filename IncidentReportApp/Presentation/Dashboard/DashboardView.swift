@@ -16,7 +16,6 @@ struct DashboardView: View {
     }
 
     var body: some View {
-        NavigationView {
             VStack(spacing: 0) {
                 // Header
                 headerView
@@ -54,7 +53,6 @@ struct DashboardView: View {
                     }
                 }
             }
-        }
     }
     
     // MARK: - Header View
