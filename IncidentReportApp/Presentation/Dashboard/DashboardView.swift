@@ -202,17 +202,20 @@ struct DashboardView: View {
         .chartLegend(position: .bottom, alignment: .center, spacing: 16)
         .chartBackground { chartProxy in
             GeometryReader { geometry in
-                let frame = geometry[chartProxy.plotAreaFrame]
-                VStack {
-                    Text("Total")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    Text("\(viewModel.totalIncidents)")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.primary)
+                if let chartProxy = chartProxy.plotFrame {
+                    
+                    let frame = geometry[chartProxy]
+                    VStack {
+                        Text("Total")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Text("\(viewModel.totalIncidents)")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundColor(.primary)
+                    }
+                    .position(x: frame.midX, y: frame.midY)
                 }
-                .position(x: frame.midX, y: frame.midY)
             }
         }
     }

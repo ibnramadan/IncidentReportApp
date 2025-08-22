@@ -148,9 +148,6 @@ final class HomeViewModel {
         applyFilters()
     }
     
-    func toggleFilters() {
-    }
-    
     func toggleStartDatePicker() {
         showStartDatePicker.toggle()
     }
@@ -164,8 +161,7 @@ final class HomeViewModel {
     }
     
     func openNewIncident() {
-        // Navigate to new incident form
-        // coordinator.navigate(to: .newIncident)
+        coordinator.navigateToSubmitIncident()
     }
     
     func updateIncidentStatus(incident: IncidentEntity, newStatus: IncidentStatus) async {

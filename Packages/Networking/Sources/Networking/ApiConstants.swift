@@ -40,5 +40,6 @@ public enum ApiConstants {
         public static let changeIncidentStatus = "/incident/change-status"
         public static let submitIncident = "/incident"
         public static let dashboard = "/dashboard"
+        public static let incidentsType = "/types"
     }
 }

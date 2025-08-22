@@ -74,9 +74,9 @@ class IncidentsRepo: IncidentsRepoProtocol {
         return try await apiManager.request(endpoint, responseType: DashboardDTO.self)
     }
     
-    func submitIncident(incident: IncidentEntity) async throws -> IncidentDTO {
-        let data = IncidentsRequestDTO(description: incident.description, latitude: incident.latitude, longitude: incident.longitude, status: incident.status, priority: incident.priority, typeId: incident.typeId, issuerId: incident.issuerId)
-        let body = try ApiManager.createBody(from: data)
+    func submitIncident(incident: IncidentRequestEntity) async throws -> IncidentDTO {
+        let requestData = IncidentsRequestDTO(description: incident.description, latitude: incident.latitude, longitude: incident.longitude, status: incident.status, priority: incident.priority, typeId: incident.typeId)
+        let body = try ApiManager.createBody(from: requestData)
         
         let endpoint = ApiEndpoint(
             path: ApiConstants.Paths.verifyOtp,
@@ -85,5 +85,15 @@ class IncidentsRepo: IncidentsRepoProtocol {
         )
         
         return try await apiManager.request(endpoint,responseType: IncidentDTO.self)
+    }
+    
+    func getIncidentsType() async throws -> [IncidentsTypeDTO] {
+        let endpoint = ApiEndpoint(
+            path: ApiConstants.Paths.incidentsType,
+            method: .get,
+            body: nil
+        )
+        
+        return try await apiManager.request(endpoint, responseType: [IncidentsTypeDTO].self)
     }
 }

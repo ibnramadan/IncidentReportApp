@@ -1,11 +1,10 @@
 //
-//  IncidentsRequestDTO.swift
+//  IncidentRequestEntity.swift
 //  IncidentReportApp
 //
 //  Created by mohamed ramadan on 22/08/2025.
 //
-
-struct IncidentsRequestDTO: Codable {
+struct IncidentRequestEntity {
     let description: String
     let latitude: Double
     let longitude: Double

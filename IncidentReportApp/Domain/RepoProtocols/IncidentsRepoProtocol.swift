@@ -12,5 +12,6 @@ protocol IncidentsRepoProtocol {
     func getIncidents() async throws -> IncidentsDTO
     func changeIncidentStatus(id: String, status: Int) async throws -> IncidentDTO
     func dashboard() async throws -> DashboardDTO
-    func submitIncident(incident: IncidentEntity) async throws -> IncidentDTO
+    func submitIncident(incident: IncidentRequestEntity) async throws -> IncidentDTO
+    func getIncidentsType() async throws -> [IncidentsTypeDTO]
 }
