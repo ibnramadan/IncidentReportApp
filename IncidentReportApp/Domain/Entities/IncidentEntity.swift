@@ -8,8 +8,8 @@
 import Foundation
 import SwiftUI
 
-struct IncidentEntity: Identifiable {
-    let id: String
+public struct IncidentEntity: Identifiable {
+    public let id: String
     let description: String
     let latitude: Double
     let longitude: Double

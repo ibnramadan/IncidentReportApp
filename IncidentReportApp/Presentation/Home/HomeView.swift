@@ -163,7 +163,6 @@ struct HomeView: View {
         .background(Color(.systemBackground))
     }
     
-    
     private var filtersView: some View {
         VStack(spacing: 12) {
             VStack(alignment: .leading, spacing: 8) {
@@ -204,7 +203,7 @@ struct HomeView: View {
                         Text("From")
                             .font(.caption)
                             .foregroundColor(.secondary)
-                        Text(formatDate(viewModel.customStartDate))
+                        Text(HomeViewHelpers.formatDate(viewModel.customStartDate))
                             .font(.subheadline)
                             .fontWeight(.medium)
                     }
@@ -224,7 +223,7 @@ struct HomeView: View {
                         Text("To")
                             .font(.caption)
                             .foregroundColor(.secondary)
-                        Text(formatDate(viewModel.customEndDate))
+                        Text(HomeViewHelpers.formatDate(viewModel.customEndDate))
                             .font(.subheadline)
                             .fontWeight(.medium)
                     }
@@ -241,14 +240,16 @@ struct HomeView: View {
         }
         .padding(.bottom, 8)
     }
-
+    
     // MARK: - Content Views
     
     private var loadingView: some View {
-        DSLoadingView(
-            message: "Loading incidents...",
-            style: .spinner
-        )
+        VStack(spacing: 16) {
+            ProgressView()
+                .scaleEffect(1.2)
+            Text("Loading incidents...")
+                .foregroundColor(.secondary)
+        }
         .frame(maxWidth: .infinity)
         .padding(.vertical, Spacing.xl)
     }
@@ -297,30 +298,23 @@ struct HomeView: View {
     
     private var incidentsList: some View {
         List(viewModel.filteredIncidents) { incident in
-            IncidentRowView(incident: incident)
-                .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
-                .listRowSeparator(.hidden)
-                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                    // Status change buttons
-                    ForEach(IncidentStatus.allCases.filter { $0.rawValue != incident.status }, id: \.self) { status in
-                        Button(status.title) {
-                            Task {
-                                await viewModel.updateIncidentStatus(incident: incident, newStatus: status)
-                            }
+            DSIncidentRowView(
+                incident: HomeViewHelpers.convertToIncidentData(incident)
+            )
+            .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+            .listRowSeparator(.hidden)
+            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                // Status change buttons
+                ForEach(IncidentStatus.allCases.filter { $0.rawValue != incident.status }, id: \.self) { status in
+                    Button(status.title) {
+                        Task {
+                            await viewModel.updateIncidentStatus(incident: incident, newStatus: status)
                         }
-                        .tint(status.color)
                     }
+                    .tint(status.color)
                 }
+            }
         }
         .listStyle(PlainListStyle())
     }
-    
-    // MARK: - Helper Methods
-    
-    private func formatDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        return formatter.string(from: date)
-    }
-
 }
