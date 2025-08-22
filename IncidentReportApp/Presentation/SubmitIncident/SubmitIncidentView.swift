@@ -22,7 +22,7 @@ struct SubmitIncidentView: View {
                 mainContentView
             }
         }
-        .navigationBarHidden(true)
+      //  .navigationBarHidden(true)
         .onAppear {
             if viewModel.incidentTypes.isEmpty {
                 Task {
@@ -30,14 +30,13 @@ struct SubmitIncidentView: View {
                 }
             }
         }
+        .navigationTitle("New Incident")
     }
     
     // MARK: - Main Content View
     
     private var mainContentView: some View {
         VStack(spacing: 0) {
-            // Custom Navigation Bar
-            navigationBar
             
             if viewModel.isLoading {
                 loadingView
@@ -45,23 +44,18 @@ struct SubmitIncidentView: View {
                 // Form Content
                 ScrollView {
                     VStack(spacing: 24) {
-                        // Description Section
                         descriptionSection
                         
-                        // Location Section
                         locationSection
                         
-                        // Type Section
                         typeSection
                         
-                        // Priority Section
                         prioritySection
                         
                     }
                     .padding()
                 }
                 
-                // Submit Button
                 submitButtonSection
             }
         }
@@ -80,46 +74,7 @@ struct SubmitIncidentView: View {
         }
     }
     
-    // MARK: - Navigation Bar
     
-    private var navigationBar: some View {
-        HStack {
-            Button(action: {
-                viewModel.dismissView()
-            }) {
-                HStack(spacing: 8) {
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 16, weight: .medium))
-                    Text("Back")
-                        .font(.body)
-                }
-                .foregroundColor(.blue)
-            }
-            
-            Spacer()
-            
-            Text("New Incident")
-                .font(.title2)
-                .fontWeight(.semibold)
-            
-            Spacer()
-            
-            // Invisible button for balance
-            Button(action: {}) {
-                HStack(spacing: 8) {
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 16, weight: .medium))
-                    Text("Back")
-                        .font(.body)
-                }
-            }
-            .opacity(0)
-            .disabled(true)
-        }
-        .padding()
-        .background(Color(.systemBackground))
-        .shadow(color: .black.opacity(0.05), radius: 1, x: 0, y: 1)
-    }
     
     // MARK: - Form Sections
     
