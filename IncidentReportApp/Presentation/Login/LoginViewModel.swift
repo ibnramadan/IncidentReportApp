@@ -40,7 +40,6 @@ final class LoginViewModel {
             return
         }
         
-        // Reset state
         isLoading = true
         errorMessage = nil
         loginSuccess = false

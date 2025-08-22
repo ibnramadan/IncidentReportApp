@@ -39,7 +39,6 @@ struct OTPView: View {
             }
             .padding(.top, 40)
             
-            // OTP Input
             VStack(spacing: 20) {
                 Text("Enter the 4-digit code")
                     .font(.caption)
@@ -54,40 +53,23 @@ struct OTPView: View {
                 )
             }
             
-            // Loading State
             if viewModel.isLoading {
-                VStack(spacing: 12) {
-                    ProgressView()
-                        .scaleEffect(1.2)
-                    
-                    Text("Verifying...")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                }
+                DSLoadingView(
+                    message: "Verifying...",
+                    style: .spinner
+                )
                 .padding()
             }
             
             // Error Message
             if let errorMessage = viewModel.errorMessage {
-                VStack(spacing: 12) {
-                    HStack {
-                        Image(systemName: "exclamationmark.triangle.fill")
-                            .foregroundColor(.red)
-                        Text(errorMessage)
-                            .foregroundColor(.red)
-                            .font(.caption)
-                    }
-                    .padding()
-                    .background(Color.red.opacity(0.1))
-                    .cornerRadius(8)
-                    
-                    Button("Try Again") {
+                DSErrorView(
+                    title: "Verification Error",
+                    message: errorMessage,
+                    retryAction: {
                         viewModel.clearError()
-                        isOTPFieldFocused = true
                     }
-                    .font(.caption)
-                    .foregroundColor(.blue)
-                }
+                )
                 .padding(.horizontal)
             }
             

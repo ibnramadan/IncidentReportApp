@@ -54,7 +54,6 @@ class AppCoordinator: BaseCoordinator<AppRoute> {
         UserDefaults.standard.set(email, forKey: "currentUser")
         UserDefaults.standard.set(token, forKey: "authToken")
         popToRoot()
-        navigate(to: .home)
     }
     
     private func checkAuthenticationState() {

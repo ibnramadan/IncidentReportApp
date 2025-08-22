@@ -10,7 +10,7 @@ import Foundation
 
 public enum ApiConstants {
     /// Base URL for all API requests
-    public static let baseURL = "https://ba4caf56-6e45-4662-bbfb-20878b8cd42e.mock.pstmn.io" // Replace with your actual base URL
+    public static let baseURL = "https://ba4caf56-6e45-4662-bbfb-20878b8cd42e.mock.pstmn.io"
     
     /// Common headers
     public enum Headers {

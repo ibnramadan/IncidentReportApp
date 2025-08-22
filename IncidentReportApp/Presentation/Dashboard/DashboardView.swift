@@ -154,7 +154,6 @@ struct DashboardView: View {
     
     private var chartSectionView: some View {
         VStack {
-            // Simple Chart Representation
             simpleChartView
         }
         .frame(height: 300)
@@ -165,22 +164,18 @@ struct DashboardView: View {
     
     private var simpleChartView: some View {
         VStack(spacing: Spacing.md) {
-            // Chart Title
             Text("Incident Distribution")
                 .heading4()
                 .fontWeight(.semibold)
             
-            // Simple Bar Chart
             HStack(alignment: .bottom, spacing: Spacing.sm) {
                 ForEach(viewModel.dashboardEntities, id: \.id) { entity in
                     VStack(spacing: Spacing.xs) {
-                        // Bar
                         Rectangle()
                             .fill(entity.statusEnum.color)
                             .frame(height: barHeight(for: entity))
                             .cornerRadius(Corners.xs)
                         
-                        // Label
                         Text(entity.statusEnum.title)
                             .captionSmall()
                             .foregroundColor(Colors.textSecondary)

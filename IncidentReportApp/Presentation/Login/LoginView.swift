@@ -55,7 +55,6 @@ struct LoginView: View {
                 }
                 .padding(.horizontal, Spacing.md)
                 
-                // Login Button
                 DSButton(
                     "Sign In",
                     style: .primary, isLoading: viewModel.isLoading
@@ -68,7 +67,6 @@ struct LoginView: View {
                 
                 Spacer()
                 
-                // Error View
                 if let errorMessage = viewModel.errorMessage {
                     DSErrorView(
                         title: "Login Error",
