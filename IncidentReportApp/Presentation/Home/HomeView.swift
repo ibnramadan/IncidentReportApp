@@ -163,11 +163,9 @@ struct HomeView: View {
         .background(Color(.systemBackground))
     }
     
-    // MARK: - Status Tabs and Date Filter
     
     private var filtersView: some View {
         VStack(spacing: 12) {
-            // Status Filter Tabs (Always Visible)
             VStack(alignment: .leading, spacing: 8) {
                 Text("Status")
                     .font(.caption)
@@ -247,39 +245,26 @@ struct HomeView: View {
     // MARK: - Content Views
     
     private var loadingView: some View {
-        VStack(spacing: 16) {
-            ProgressView()
-                .scaleEffect(1.2)
-            Text("Loading incidents...")
-                .foregroundColor(.secondary)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        DSLoadingView(
+            message: "Loading incidents...",
+            style: .spinner
+        )
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, Spacing.xl)
     }
     
     private func errorView(errorMessage: String) -> some View {
-        VStack(spacing: 16) {
-            Image(systemName: "exclamationmark.triangle.fill")
-                .font(.system(size: 50))
-                .foregroundColor(.red)
-            
-            Text("Error")
-                .font(.title2)
-                .fontWeight(.semibold)
-            
-            Text(errorMessage)
-                .font(.body)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-            
-            Button("Try Again") {
+        DSErrorView(
+            title: "Error Loading Incidents",
+            message: errorMessage,
+            retryAction: {
                 Task {
                     await viewModel.refreshIncidents()
                 }
             }
-            .foregroundColor(.blue)
-        }
+        )
         .padding()
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .frame(maxWidth: .infinity)
     }
     
     private var emptyStateView: some View {

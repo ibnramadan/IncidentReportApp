@@ -70,10 +70,6 @@ final class HomeViewModel {
         filteredIncidents = filtered.sorted { $0.createdDate > $1.createdDate }
     }
     
-    func updateSearchText(_ text: String) {
-        applyFilters()
-    }
-    
     func updateStatusFilter(_ status: IncidentStatus?) {
         selectedStatus = status
         applyFilters()
@@ -140,12 +136,5 @@ final class HomeViewModel {
     
     func logout() {
         coordinator.logout()
-    }
-    
-    // Formatted date range for display
-    var dateRangeText: String {
-            let formatter = DateFormatter()
-            formatter.dateStyle = .medium
-            return "\(formatter.string(from: customStartDate)) - \(formatter.string(from: customEndDate))"
     }
 }
