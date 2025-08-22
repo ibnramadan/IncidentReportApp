@@ -510,10 +510,3 @@ struct SubmitIncidentView: View {
     }
 }
 
-// MARK: - String Extension
-
-extension String {
-    var trimmedString: String {
-        self.trimmingCharacters(in: .whitespacesAndNewlines)
-    }
-}
