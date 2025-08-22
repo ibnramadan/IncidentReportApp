@@ -440,7 +440,7 @@ struct SubmitIncidentView: View {
     // MARK: - Location Picker Sheet
     
     private var locationPickerSheet: some View {
-        NavigationView {
+        NavigationStack {
             VStack(spacing: 20) {
                 Text("Enter GPS Coordinates")
                     .font(.headline)
