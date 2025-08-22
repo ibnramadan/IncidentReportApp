@@ -41,6 +41,8 @@ struct AppCoordinatorView: View {
             OTPView(viewModel: OTPViewModel(email: email, repo: dependencies.incidentsRepo, coordinator: appCoordinator))
         case .dashboard:
             DashboardView(viewModel: DashboardViewModel(coordinator: appCoordinator, repo: dependencies.incidentsRepo))
+        case .submitIncident:
+            SubmitIncidentView(viewModel: SubmitIncidentViewModel(coordinator: appCoordinator, repo: dependencies.incidentsRepo))
         }
     }
 }

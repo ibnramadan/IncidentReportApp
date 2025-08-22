@@ -38,6 +38,14 @@ class AppCoordinator: BaseCoordinator<AppRoute> {
         navigate(to: .dashboard)
     }
     
+    func navigateToSubmitIncident() {
+        navigate(to: .submitIncident)
+    }
+    
+    func navigateBack() {
+        pop()
+    }
+    
     func otpVerificationSuccessful(email: String, token: String) {
         isAuthenticated = true
         currentUser = email
