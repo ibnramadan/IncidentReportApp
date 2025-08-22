@@ -14,10 +14,16 @@ struct AppCoordinatorView: View {
     @EnvironmentObject private var dependencies: AppDependencies
     
     var body: some View {
-        CoordinatorView(coordinator: appCoordinator) {
-            initialView
-        } destination: { route in
-            destinationView(for: route)
+        if appCoordinator.showSplash {
+            SplashView {
+                appCoordinator.splashCompleted()
+            }
+        } else {
+            CoordinatorView(coordinator: appCoordinator) {
+                initialView
+            } destination: { route in
+                destinationView(for: route)
+            }
         }
     }
     

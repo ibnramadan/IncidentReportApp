@@ -13,6 +13,7 @@ class AppCoordinator: BaseCoordinator<AppRoute> {
      var isAuthenticated = false
      var currentUser: String?
      var authToken: String?
+     var showSplash = true
     
     override init() {
         super.init()
@@ -54,6 +55,10 @@ class AppCoordinator: BaseCoordinator<AppRoute> {
         UserDefaults.standard.set(email, forKey: "currentUser")
         UserDefaults.standard.set(token, forKey: "authToken")
         popToRoot()
+    }
+    
+    func splashCompleted() {
+        showSplash = false
     }
     
     private func checkAuthenticationState() {
