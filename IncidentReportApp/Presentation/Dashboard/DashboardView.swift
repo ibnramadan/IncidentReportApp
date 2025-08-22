@@ -72,16 +72,20 @@ struct DashboardView: View {
                 Spacer()
                 
                 // Refresh Button
-                DSButton(
-                    "",
-                    icon: "arrow.clockwise",
-                    style: .ghost
-                ) {
+                Button(action: {
                     Task {
-                        await viewModel.refreshDashboard()
+                       await viewModel.refreshDashboard()
                     }
+                }) {
+                    Image(systemName: "arrow.clockwise")
+                        .font(.system(size: 18))
+                        .foregroundColor(.blue)
+                        .frame(width: 44, height: 44)
+                        .background(Color.blue.opacity(0.1))
+                        .cornerRadius(22)
                 }
                 .disabled(viewModel.isLoading)
+                
             }
         }
         .padding()
