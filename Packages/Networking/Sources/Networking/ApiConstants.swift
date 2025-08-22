@@ -36,6 +36,9 @@ public enum ApiConstants {
     public enum Paths {
         public static let login = "/login"
         public static let verifyOtp = "/verify-otp"
-        public static let getIncidentList = "/incident"
+        public static let incidents = "/incident"
+        public static let changeIncidentStatus = "/incident/change-status"
+        public static let submitIncident = "/incident"
+        public static let dashboard = "/dashboard"
     }
 }

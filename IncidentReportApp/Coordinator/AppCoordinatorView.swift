@@ -24,7 +24,7 @@ struct AppCoordinatorView: View {
     @ViewBuilder
     private var initialView: some View {
         if appCoordinator.isAuthenticated {
-            HomeView(viewModel: HomeViewModel(coordinator: appCoordinator))
+            HomeView(viewModel: HomeViewModel(coordinator: appCoordinator, repo: dependencies.incidentsRepo))
         } else {
             LoginView(viewModel: LoginViewModel(repo: dependencies.incidentsRepo, coordinator: appCoordinator))
         }
@@ -34,11 +34,13 @@ struct AppCoordinatorView: View {
     private func destinationView(for route: AppRoute) -> some View {
         switch route {
         case .home:
-            HomeView(viewModel: HomeViewModel(coordinator: appCoordinator))
+            HomeView(viewModel: HomeViewModel(coordinator: appCoordinator, repo: dependencies.incidentsRepo))
         case .login:
             LoginView(viewModel: LoginViewModel(repo: dependencies.incidentsRepo, coordinator: appCoordinator))
         case .otp(let email):
             OTPView(viewModel: OTPViewModel(email: email, repo: dependencies.incidentsRepo, coordinator: appCoordinator))
+        case .dashboard:
+            DashboardView(viewModel: DashboardViewModel(coordinator: appCoordinator, repo: dependencies.incidentsRepo))
         }
     }
 }

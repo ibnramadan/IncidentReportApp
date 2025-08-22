@@ -9,4 +9,5 @@ enum AppRoute: Hashable {
     case home
     case login
     case otp(email: String)
+    case dashboard
 }
