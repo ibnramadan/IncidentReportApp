@@ -6,167 +6,139 @@
 //
 
 import SwiftUI
-import Charts
+import DesignSystem
 
 struct DashboardView: View {
     @State private var viewModel: DashboardViewModel
-    
+
     init(viewModel: DashboardViewModel) {
         _viewModel = State(wrappedValue: viewModel)
     }
-    
+
     var body: some View {
-        VStack(spacing: 0) {
-            // Header
-            headerView
-            
-            // Content
-            ScrollView {
-                LazyVStack(spacing: 20) {
-                    if viewModel.isLoading {
-                        loadingView
-                    } else if let errorMessage = viewModel.errorMessage {
-                        errorView(errorMessage: errorMessage)
-                    } else if viewModel.dashboardEntities.isEmpty {
-                        emptyStateView
-                    } else {
-                        // Summary Cards
-                        summaryCardsView
-                        
-                        // Chart Section
-                        chartSectionView
-                        
-                        // Statistics List
-                        statisticsListView
+        NavigationView {
+            VStack(spacing: 0) {
+                // Header
+                headerView
+                
+                // Content
+                ScrollView {
+                    LazyVStack(spacing: Spacing.lg) {
+                        if viewModel.isLoading {
+                            loadingView
+                        } else if let errorMessage = viewModel.errorMessage {
+                            errorView(errorMessage: errorMessage)
+                        } else if viewModel.dashboardEntities.isEmpty {
+                            emptyStateView
+                        } else {
+                            // Summary Cards
+                            summaryCardsView
+                            
+                            // Chart Section
+                            chartSectionView
+                            
+                            // Statistics List
+                            statisticsListView
+                        }
+                    }
+                    .padding()
+                }
+            }
+            .refreshable {
+                await viewModel.refreshDashboard()
+            }
+            .onAppear {
+                if viewModel.dashboardEntities.isEmpty {
+                    Task {
+                        await viewModel.loadDashboard()
                     }
                 }
-                .padding()
             }
         }
-        //   .navigationBarHidden(true)
-        .refreshable {
-            await viewModel.refreshDashboard()
-        }
-        .onAppear {
-            if viewModel.dashboardEntities.isEmpty {
-                Task {
-                    await viewModel.loadDashboard()
-                }
-            }
-        }
-        
     }
     
     // MARK: - Header View
-    
     private var headerView: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: Spacing.sm) {
             HStack {
-                
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: Spacing.xs) {
                     Text("Dashboard")
-                        .font(.title2)
+                        .heading2()
                         .fontWeight(.semibold)
                     
                     Text("Incidents Overview")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
+                        .bodyMedium()
+                        .foregroundColor(Colors.textSecondary)
                 }
                 
                 Spacer()
                 
                 // Refresh Button
-                Button(action: {
+                DSButton(
+                    "",
+                    icon: "arrow.clockwise",
+                    style: .ghost
+                ) {
                     Task {
                         await viewModel.refreshDashboard()
                     }
-                }) {
-                    Image(systemName: "arrow.clockwise")
-                        .font(.system(size: 18))
-                        .foregroundColor(.blue)
-                        .frame(width: 44, height: 44)
-                        .background(Color.blue.opacity(0.1))
-                        .cornerRadius(22)
                 }
                 .disabled(viewModel.isLoading)
             }
         }
         .padding()
-        .background(Color(.systemBackground))
+        .background(Colors.background)
     }
     
     // MARK: - Content Views
-    
     private var loadingView: some View {
-        VStack(spacing: 16) {
-            ProgressView()
-                .scaleEffect(1.2)
-            Text("Loading dashboard...")
-                .foregroundColor(.secondary)
-        }
+        DSLoadingView(
+            message: "Loading dashboard...",
+            style: .spinner
+        )
         .frame(maxWidth: .infinity)
-        .padding(.vertical, 40)
+        .padding(.vertical, Spacing.xl)
     }
     
     private func errorView(errorMessage: String) -> some View {
-        VStack(spacing: 16) {
-            Image(systemName: "exclamationmark.triangle.fill")
-                .font(.system(size: 50))
-                .foregroundColor(.red)
-            
-            Text("Error Loading Dashboard")
-                .font(.title3)
-                .fontWeight(.semibold)
-            
-            Text(errorMessage)
-                .font(.body)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-            
-            Button("Try Again") {
+        DSErrorView(
+            title: "Error Loading Dashboard",
+            message: errorMessage,
+            retryAction: {
                 Task {
                     await viewModel.refreshDashboard()
                 }
             }
-            .foregroundColor(.blue)
-        }
+        )
         .padding()
         .frame(maxWidth: .infinity)
     }
     
     private var emptyStateView: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "chart.bar.fill")
-                .font(.system(size: 50))
-                .foregroundColor(.secondary)
-            
-            Text("No Data Available")
-                .font(.title3)
-                .fontWeight(.semibold)
-            
-            Text("Dashboard data will appear here when available")
-                .font(.body)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-        }
+        DSEmptyStateView(
+            icon: "chart.bar.fill",
+            title: "No Data Available",
+            message: "Dashboard data will appear here when available"
+        )
         .padding()
         .frame(maxWidth: .infinity)
     }
     
     private var summaryCardsView: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: Spacing.md) {
             // Total Incidents Card
-            SummaryCard(
+            DSSummaryCard(
                 title: "Total Incidents",
                 value: "\(viewModel.totalIncidents)",
-                icon: "exclamationmark.triangle.fill",
-                color: .blue
+                subtitle: nil,
+                icon: "chart.bar.fill",
+                color: Colors.primary
             )
             
             // Status Breakdown
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2), spacing: 12) {
-                ForEach(viewModel.dashboardEntities) { entity in
-                    SummaryCard(
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2), spacing: Spacing.sm) {
+                ForEach(viewModel.dashboardEntities, id: \.id) { entity in
+                    DSSummaryCard(
                         title: entity.statusEnum.title,
                         value: "\(entity.count)",
                         subtitle: viewModel.getFormattedPercentage(for: entity),
@@ -180,149 +152,94 @@ struct DashboardView: View {
     
     private var chartSectionView: some View {
         VStack {
-            // Pie Chart
-            pieChartView
+            // Simple Chart Representation
+            simpleChartView
         }
         .frame(height: 300)
         .padding()
-        .background(Color(.systemGray6).opacity(0.5))
-        .cornerRadius(16)
+        .background(Colors.secondaryBackground.opacity(0.5))
+        .cornerRadius(Corners.lg)
     }
     
-    private var pieChartView: some View {
-        Chart(viewModel.dashboardEntities) { entity in
-            SectorMark(
-                angle: .value("Count", entity.count),
-                innerRadius: .ratio(0.0),
-                outerRadius: .ratio(0.8)
-            )
-            .foregroundStyle(entity.statusEnum.color)
-            .opacity(0.8)
-        }
-        .chartLegend(position: .bottom, alignment: .center, spacing: 16)
-        .chartBackground { chartProxy in
-            GeometryReader { geometry in
-                if let chartProxy = chartProxy.plotFrame {
-                    
-                    let frame = geometry[chartProxy]
-                    VStack {
-                        Text("Total")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        Text("\(viewModel.totalIncidents)")
-                            .font(.title2)
-                            .fontWeight(.bold)
-                            .foregroundColor(.primary)
+    private var simpleChartView: some View {
+        VStack(spacing: Spacing.md) {
+            // Chart Title
+            Text("Incident Distribution")
+                .heading4()
+                .fontWeight(.semibold)
+            
+            // Simple Bar Chart
+            HStack(alignment: .bottom, spacing: Spacing.sm) {
+                ForEach(viewModel.dashboardEntities, id: \.id) { entity in
+                    VStack(spacing: Spacing.xs) {
+                        // Bar
+                        Rectangle()
+                            .fill(entity.statusEnum.color)
+                            .frame(height: barHeight(for: entity))
+                            .cornerRadius(Corners.xs)
+                        
+                        // Label
+                        Text(entity.statusEnum.title)
+                            .captionSmall()
+                            .foregroundColor(Colors.textSecondary)
+                            .rotationEffect(.degrees(-45))
+                            .offset(y: Spacing.xs)
                     }
-                    .position(x: frame.midX, y: frame.midY)
                 }
             }
+            .frame(height: 150)
+            .padding(.horizontal, Spacing.md)
+            
+            // Legend
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2), spacing: Spacing.sm) {
+                ForEach(viewModel.dashboardEntities, id: \.id) { entity in
+                    HStack(spacing: Spacing.xs) {
+                        Circle()
+                            .fill(entity.statusEnum.color)
+                            .frame(width: 8, height: 8)
+                        
+                        Text(entity.statusEnum.title)
+                            .captionMedium()
+                            .foregroundColor(Colors.textPrimary)
+                        
+                        Spacer()
+                        
+                        Text("\(entity.count)")
+                            .captionMedium()
+                            .fontWeight(.semibold)
+                            .foregroundColor(entity.statusEnum.color)
+                    }
+                }
+            }
+            .padding(.horizontal, Spacing.md)
         }
+    }
+    
+    private func barHeight(for entity: DashboardEntity) -> CGFloat {
+        let maxCount = viewModel.dashboardEntities.map { $0.count }.max() ?? 1
+        let percentage = Double(entity.count) / Double(maxCount)
+        return CGFloat(percentage) * 120 // Max height of 120
     }
     
     private var statisticsListView: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: Spacing.md) {
             Text("Detailed Statistics")
-                .font(.title3)
+                .heading3()
                 .fontWeight(.semibold)
             
-            VStack(spacing: 12) {
-                ForEach(viewModel.dashboardEntities) { entity in
-                    StatisticRowView(
-                        entity: entity,
-                        totalCount: viewModel.totalIncidents
+            VStack(spacing: Spacing.sm) {
+                ForEach(viewModel.dashboardEntities, id: \.id) { entity in
+                    DSStatisticRow(
+                        title: entity.statusEnum.title,
+                        value: "\(entity.count)",
+                        subtitle: String(format: "%.1f%% of total", Double(entity.count) / Double(viewModel.totalIncidents) * 100),
+                        color: entity.statusEnum.color
                     )
                 }
             }
             .padding()
-            .background(Color(.systemGray6).opacity(0.5))
-            .cornerRadius(16)
+            .background(Colors.secondaryBackground.opacity(0.5))
+            .cornerRadius(Corners.lg)
         }
-    }
-}
-
-struct SummaryCard: View {
-    let title: String
-    let value: String
-    let subtitle: String?
-    let icon: String
-    let color: Color
-    
-    init(title: String, value: String, subtitle: String? = nil, icon: String, color: Color) {
-        self.title = title
-        self.value = value
-        self.subtitle = subtitle
-        self.icon = icon
-        self.color = color
-    }
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Image(systemName: icon)
-                    .font(.system(size: 20))
-                    .foregroundColor(color)
-                
-                Spacer()
-            }
-            
-            Text(title)
-                .font(.caption)
-                .foregroundColor(.secondary)
-            
-            Text(value)
-                .font(.title2)
-                .fontWeight(.bold)
-                .foregroundColor(.primary)
-            
-            if let subtitle = subtitle {
-                Text(subtitle)
-                    .font(.caption)
-                    .foregroundColor(color)
-            }
-        }
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.systemBackground))
-        .cornerRadius(12)
-        .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 1)
-    }
-}
-
-struct StatisticRowView: View {
-    let entity: DashboardEntity
-    let totalCount: Int
-    
-    private var percentage: Double {
-        guard totalCount > 0 else { return 0 }
-        return Double(entity.count) / Double(totalCount)
-    }
-    
-    var body: some View {
-        HStack(spacing: 12) {
-            // Status indicator
-            Circle()
-                .fill(entity.statusEnum.color)
-                .frame(width: 12, height: 12)
-            
-            // Status info
-            VStack(alignment: .leading, spacing: 2) {
-                Text(entity.statusEnum.title)
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                
-                Text(String(format: "%.1f%% of total", percentage * 100))
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
-            
-            Spacer()
-            
-            Text("\(entity.count)")
-                .font(.title3)
-                .fontWeight(.semibold)
-                .foregroundColor(entity.statusEnum.color)
-        }
-        .padding(.vertical, 8)
     }
 }
