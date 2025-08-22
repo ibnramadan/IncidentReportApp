@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import DesignSystem
+
 struct OTPView: View {
     @State private var viewModel: OTPViewModel
     @FocusState private var isOTPFieldFocused: Bool
@@ -48,7 +50,7 @@ struct OTPView: View {
                     otp: $viewModel.otp,
                     onOTPChange: { newOTP in
                         viewModel.updateOTP(newOTP)
-                    }
+                    }, isFieldFocused: isOTPFieldFocused
                 )
             }
             
